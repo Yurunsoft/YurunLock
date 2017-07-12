@@ -1,0 +1,4 @@
+/.vscode
+/vendor
+/test/file/test.file
+/test/file/callbacktest.file
