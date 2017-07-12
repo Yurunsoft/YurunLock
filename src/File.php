@@ -3,8 +3,13 @@ namespace Yurun\Until\Lock;
 
 class File extends Base
 {
+	/**
+	 * 锁文件路径
+	 * @var string
+	 */
 	public $filePath;
 	private $fp;
+
 	public function __construct($name, $filePath = null)
 	{
 		$this->name = $name;
