@@ -19,6 +19,7 @@ PHP阻塞锁和非阻塞锁机制，内置解决并发锁重复执行的方案�
 ## 文件锁
 
 ```php
+<?php
 $lock = new \Yurun\Until\Lock\File('我是锁名称');
 
 $lock->lock(); // 阻塞锁
@@ -57,6 +58,7 @@ else
 ## redis/memcache/memcached锁
 
 ```php
+<?php
 $lock = new \Yurun\Until\Lock\Redis(	// 可以把Redis替换成Memcache/Memcached，下面代码用法相同
 	'我是锁名称',
 	array(
