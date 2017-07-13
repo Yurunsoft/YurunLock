@@ -71,6 +71,9 @@ class Redis extends Base
 	 */
 	protected function __lock()
 	{
+		$time = microtime(true);
+		$sleepTime = $this->waitSleepTime * 1000;
+		$waitTimeout = $this->waitTimeout / 1000;
 		while(true)
 		{
 			$value = json_decode($this->handler->get($this->name), true);
@@ -101,7 +104,14 @@ class Redis extends Base
 					}
 				}
 			}
-			usleep($this->waitSleepTime * 1000);
+			if(0 === $this->waitTimeout || microtime(true) - $time < $waitTimeout)
+			{
+				usleep($sleepTime);
+			}
+			else
+			{
+				break;
+			}
 		}
 		return false;
 	}
