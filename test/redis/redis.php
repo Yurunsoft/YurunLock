@@ -1,4 +1,5 @@
 <?php
+namespace Yurun\Until\Lock;
 require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 function canTest($type)
 {
@@ -23,17 +24,29 @@ function test($type)
 $lock2 = new \Yurun\Until\Lock\Redis('test2');
 if(canTest(''))
 {
-	$lock2->lock();
-	test('');
-	$lock2->unlock();
+	if(LockConst::LOCK_RESULT_SUCCESS === $lock2->lock())
+	{
+		test('');
+		$lock2->unlock();
+	}
 }
 
 // 并发测试-并发判断回调(callbacktest.redis)
 $lock1 = new \Yurun\Until\Lock\Redis('test1');
-if(\Yurun\Until\Lock\LockConst::LOCK_RESULT_CONCURRENT_UNTREATED === $lock1->lock(function(){
+switch($lock1->lock(function(){
 	return !canTest('callback');
 }))
 {
-	test('callback');
+	case LockConst::LOCK_RESULT_CONCURRENT_COMPLETE:
+		// 其它请求已处理
+		$lock1->unlock();
+		break;
+	case LockConst::LOCK_RESULT_CONCURRENT_UNTREATED:
+		// 在当前请求处理
+		test('callback');
+		$lock1->unlock();
+		break;
+	case LockConst::LOCK_RESULT_FAIL:
+		echo '获取锁失败', PHP_EOL;
+		break;
 }
-$lock1->unlock();
