@@ -36,6 +36,7 @@ class File extends Base
 	 */
 	protected function __unlock()
 	{
+		flock($this->fp, LOCK_UN); // 解锁。狗日的w3school误导我，让我以为关闭文件后会自动解锁
 		fclose($this->fp);
 	}
 
