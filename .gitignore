@@ -2,3 +2,5 @@
 /vendor
 /test/file/test.file
 /test/file/callbacktest.file
+/test/redis/test.redis
+/test/redis/callbacktest.redis

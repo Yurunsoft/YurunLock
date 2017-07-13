@@ -37,4 +37,9 @@ final class LockConst
 	 * 未加锁
 	 */
 	const EXCEPTION_UNLOCKED = 10003;
+
+	/**
+	 * 未找到扩展
+	 */
+	const EXCEPTION_EXTENSIONS_NOT_FOUND = 10004;
 }
