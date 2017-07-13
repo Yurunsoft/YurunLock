@@ -6,3 +6,5 @@
 /test/redis/callbacktest.redis
 /test/memcache/test.memcache
 /test/memcache/callbacktest.memcache
+/test/memcached/test.memcached
+/test/memcached/callbacktest.memcached
