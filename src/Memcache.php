@@ -49,18 +49,26 @@ class Memcache extends Base
 		$this->waitTimeout = $waitTimeout;
 		$this->waitSleepTime = $waitSleepTime;
 		$this->lockExpire = $lockExpire;
-		$host = isset($params['host']) ? $params['host'] : '127.0.0.1';
-		$port = isset($params['port']) ? $params['port'] : 11211;
-		$timeout = isset($params['timeout']) ? $params['timeout'] : 120;
-		$pconnect = isset($params['pconnect']) ? $params['pconnect'] : false;
-		$this->handler = new \Memcache;
-		if($pconnect)
+		if(\is_resource($params))
 		{
-			$this->handler->pconnect($host, $port, $timeout);
+			$this->handler = $params;
+			$this->isInHandler = true;
 		}
 		else
 		{
-			$this->handler->connect($host, $port, $timeout);
+			$host = isset($params['host']) ? $params['host'] : '127.0.0.1';
+			$port = isset($params['port']) ? $params['port'] : 11211;
+			$timeout = isset($params['timeout']) ? $params['timeout'] : 120;
+			$pconnect = isset($params['pconnect']) ? $params['pconnect'] : false;
+			$this->handler = new \Memcache;
+			if($pconnect)
+			{
+				$this->handler->pconnect($host, $port, $timeout);
+			}
+			else
+			{
+				$this->handler->connect($host, $port, $timeout);
+			}
 		}
 		$this->guid = uniqid('', true);
 	}

@@ -13,8 +13,23 @@ class File extends Base
 	public function __construct($name, $filePath = null)
 	{
 		$this->name = $name;
-		$this->filePath = null === $filePath ? sys_get_temp_dir() : $filePath;
-		$this->fp = fopen($this->filePath . '/' . $name . '.lock', 'w+');
+		if(null === $filePath)
+		{
+			$filePath = sys_get_temp_dir();
+		}
+		else if(\is_resource($filePath))
+		{
+			$this->fp = $filePath;
+			$this->isInHandler = true;
+		}
+		else
+		{
+			$this->filePath = $filePath;
+		}
+		if(null === $this->fp)
+		{
+			$this->fp = fopen($this->filePath . '/' . $name . '.lock', 'w+');
+		}
 		if(false === $this->fp)
 		{
 			throw new Exception('加锁文件打开失败', LockConst::EXCEPTION_LOCKFILE_OPEN_FAIL);

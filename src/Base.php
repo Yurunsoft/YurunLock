@@ -16,6 +16,12 @@ abstract class Base
 	public $params;
 
 	/**
+	 * 是否传入了锁操作对象，为true时不自动关闭该对象
+	 * @var boolean
+	 */
+	public $isInHandler = false;
+
+	/**
 	 * 是否已加锁
 	 * @var bool
 	 */
