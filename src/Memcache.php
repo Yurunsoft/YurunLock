@@ -49,10 +49,10 @@ class Memcache extends Base
 		$this->waitTimeout = $waitTimeout;
 		$this->waitSleepTime = $waitSleepTime;
 		$this->lockExpire = $lockExpire;
-		$host = isset($option['host']) ? $option['host'] : '127.0.0.1';
-		$port = isset($option['port']) ? $option['port'] : 11211;
-		$timeout = isset($option['timeout']) ? $option['timeout'] : 120;
-		$pconnect = isset($option['pconnect']) ? $option['pconnect'] : false;
+		$host = isset($params['host']) ? $params['host'] : '127.0.0.1';
+		$port = isset($params['port']) ? $params['port'] : 11211;
+		$timeout = isset($params['timeout']) ? $params['timeout'] : 120;
+		$pconnect = isset($params['pconnect']) ? $params['pconnect'] : false;
 		$this->handler = new \Memcache;
 		if($pconnect)
 		{

@@ -49,13 +49,13 @@ class Memcached extends Base
 		$this->waitTimeout = $waitTimeout;
 		$this->waitSleepTime = $waitSleepTime;
 		$this->lockExpire = $lockExpire;
-		$host = isset($option['host']) ? $option['host'] : '127.0.0.1';
-		$port = isset($option['port']) ? $option['port'] : 11211;
+		$host = isset($params['host']) ? $params['host'] : '127.0.0.1';
+		$port = isset($params['port']) ? $params['port'] : 11211;
 		$this->handler = new \Memcached;
 		$this->handler->addServer($host, $port);
-		if(!empty($option['options']))
+		if(!empty($params['options']))
 		{
-			$this->handler->setOptions($option['options']);
+			$this->handler->setOptions($params['options']);
 		}
 		$this->guid = uniqid('', true);
 	}
