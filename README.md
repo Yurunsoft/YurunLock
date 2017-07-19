@@ -27,17 +27,23 @@ $lock->lock(); // 阻塞锁
 $lock->unlock(); // 解锁
 
 // 带回调的阻塞锁，防止并发锁处理重复执行
-switch($lock->lock(function(){
-	return false; // true:LOCK_RESULT_CONCURRENT_COMPLETE false:LOCK_RESULT_CONCURRENT_UNTREATED
-}))
+result = $lock->lock(
+	function(){
+		// TODO:在这里做你的加锁后处理的任务
+
+	},
+	function(){
+		// 判断是否其它并发已经处理过任务
+		return false;
+	}
+);
+switch($result)
 {
 	case LockConst::LOCK_RESULT_CONCURRENT_COMPLETE:
 		// 其它请求已处理
-		$lock->unlock();
 		break;
 	case LockConst::LOCK_RESULT_CONCURRENT_UNTREATED:
-		// TODO:在这里做你的一些事情
-		$lock->unlock();
+		// 在当前请求处理
 		break;
 	case LockConst::LOCK_RESULT_FAIL:
 		// 获取锁失败
@@ -77,17 +83,23 @@ $lock->lock(); // 阻塞锁
 $lock->unlock(); // 解锁
 
 // 带回调的阻塞锁，防止并发锁处理重复执行
-switch($lock->lock(function(){
-	return false; // true:LOCK_RESULT_CONCURRENT_COMPLETE false:LOCK_RESULT_CONCURRENT_UNTREATED
-}))
+result = $lock->lock(
+	function(){
+		// TODO:在这里做你的加锁后处理的任务
+
+	},
+	function(){
+		// 判断是否其它并发已经处理过任务
+		return false;
+	}
+);
+switch($result)
 {
 	case LockConst::LOCK_RESULT_CONCURRENT_COMPLETE:
 		// 其它请求已处理
-		$lock->unlock();
 		break;
 	case LockConst::LOCK_RESULT_CONCURRENT_UNTREATED:
-		// TODO:在这里做你的一些事情
-		$lock->unlock();
+		// 在当前请求处理
 		break;
 	case LockConst::LOCK_RESULT_FAIL:
 		// 获取锁失败
@@ -103,4 +115,27 @@ else
 {
 	// 获取锁失败
 }
+```
+
+## 直接传入操作对象
+
+直接传入操作对象支持文件、redis、memcache、memcached。可以防止重复实例化对象，造成内存和网络负担。
+
+```php
+// 文件
+$fp = fopen('1.txt', 'w+');
+$lock = new \Yurun\Until\Lock\File('我是锁名称', $fp);
+$lock->lock();
+// 做一些事情
+$lock->unlock();
+fclose($fp);
+
+// redis、memcache、memcached同理
+$redis = new \Redis;
+$redis->connect($host, $port, $timeout);
+$lock = new \Yurun\Until\Lock\Redis('我是锁名称', $$redis);
+$lock->lock();
+// 做一些事情
+$lock->unlock();
+redis->close();
 ```
