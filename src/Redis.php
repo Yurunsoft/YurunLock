@@ -23,7 +23,7 @@ class Redis extends Base
 
 	/**
 	 * Redis操作对象
-	 * @var Redis
+	 * @var \Redis
 	 */
 	public $handler;
 
@@ -128,7 +128,7 @@ class Redis extends Base
 		}
 		else
 		{
-			return false;
+			return true;
 		}
 	}
 
@@ -165,5 +165,19 @@ class Redis extends Base
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 关闭锁对象
+	 * @return bool
+	 */
+	protected function __close()
+	{
+		if(null !== $this->handler)
+		{
+			$result = $this->handler->close();
+			$this->handler = null;
+			return $result;
+		}
 	}
 }

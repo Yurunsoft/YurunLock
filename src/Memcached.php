@@ -23,7 +23,7 @@ class Memcached extends Base
 
 	/**
 	 * Memcached操作对象
-	 * @var Memcached
+	 * @var \Memcached
 	 */
 	public $handler;
 
@@ -121,7 +121,7 @@ class Memcached extends Base
 		}
 		else
 		{
-			return false;
+			return true;
 		}
 	}
 
@@ -158,5 +158,19 @@ class Memcached extends Base
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 关闭锁对象
+	 * @return bool
+	 */
+	protected function __close()
+	{
+		if(null !== $this->handler)
+		{
+			$result = $this->handler->close();
+			$this->handler = null;
+			return $result;
+		}
 	}
 }

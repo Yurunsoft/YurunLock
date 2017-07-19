@@ -27,6 +27,11 @@ abstract class Base
 		$this->params = $params;
 	}
 
+	public function __destruct()
+	{
+		$this->close();
+	}
+
 	/**
 	 * 是否已加锁
 	 * @return boolean
@@ -38,10 +43,11 @@ abstract class Base
 
 	/**
 	 * 加锁
+	 * @param callback $callback 加锁后执行的任务回调，lock方法执行完后自动解锁
 	 * @param callback $concurrentCallback 并发判断回调，如果不为null则在加锁成功后调用。用于判断是否已在之前的并发中处理过该任务。true:已处理，false:未处理
-	 * @return bool
+	 * @return int
 	 */
-	public function lock($concurrentCallback = null)
+	public function lock($callback = null, $concurrentCallback = null)
 	{
 		if($this->isLocked)
 		{
@@ -52,6 +58,11 @@ abstract class Base
 			$this->isLocked = true;
 			if(null === $concurrentCallback)
 			{
+				if(null !== $callback)
+				{
+					$callback();
+					$this->unlock();
+				}
 				return LockConst::LOCK_RESULT_SUCCESS;
 			}
 			else
@@ -62,6 +73,11 @@ abstract class Base
 				}
 				else
 				{
+					if(null !== $callback)
+					{
+						$callback();
+						$this->unlock();
+					}
 					return LockConst::LOCK_RESULT_CONCURRENT_UNTREATED;
 				}
 			}
@@ -95,9 +111,10 @@ abstract class Base
 
 	/**
 	 * 不阻塞加锁
+	 * @param callback $callback 加锁后执行的任务回调，lock方法执行完后自动解锁
 	 * @return bool
 	 */
-	public function unblockLock()
+	public function unblockLock($callback = null)
 	{
 		if($this->isLocked)
 		{
@@ -106,26 +123,34 @@ abstract class Base
 		if($this->__unblockLock())
 		{
 			$this->isLocked = true;
-			if(null === $concurrentCallback)
+			if(null !== $callback)
 			{
-				return LockConst::LOCK_RESULT_SUCCESS;
+				$callback();
+				$this->unlock();
 			}
-			else
-			{
-				if($concurrentCallback())
-				{
-					return LockConst::LOCK_RESULT_CONCURRENT_COMPLETE;
-				}
-				else
-				{
-					return LockConst::LOCK_RESULT_CONCURRENT_UNTREATED;
-				}
-			}
+			return true;
 		}
 		else
 		{
-			return LockConst::LOCK_RESULT_FAIL;
+			return false;
 		}
+	}
+
+	/**
+	 * 关闭锁对象
+	 * @return bool
+	 */
+	public function close()
+	{
+		if($this->isLocked)
+		{
+			$result = $this->unlock();
+		}
+		else
+		{
+			$result = true;
+		}
+		return $result && $this->__close();
 	}
 
 	/**
@@ -145,4 +170,10 @@ abstract class Base
 	 * @return bool
 	 */
 	protected abstract function __unblockLock();
+
+	/**
+	 * 关闭锁对象
+	 * @return bool
+	 */
+	protected abstract function __close();
 }

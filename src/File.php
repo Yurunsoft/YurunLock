@@ -36,8 +36,7 @@ class File extends Base
 	 */
 	protected function __unlock()
 	{
-		flock($this->fp, LOCK_UN); // 解锁。狗日的w3school误导我，让我以为关闭文件后会自动解锁
-		fclose($this->fp);
+		return flock($this->fp, LOCK_UN); // 解锁。狗日的w3school误导我，让我以为关闭文件后会自动解锁
 	}
 
 	/**
@@ -47,5 +46,19 @@ class File extends Base
 	protected function __unblockLock()
 	{
 		return flock($this->fp, LOCK_EX | LOCK_NB);
+	}
+
+	/**
+	 * 关闭锁对象
+	 * @return bool
+	 */
+	protected function __close()
+	{
+		if(null !== $this->fp)
+		{
+			$result = fclose($this->fp);
+			$this->fp = null;
+			return $result;
+		}
 	}
 }

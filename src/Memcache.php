@@ -23,7 +23,7 @@ class Memcache extends Base
 
 	/**
 	 * Memcache操作对象
-	 * @var Memcache
+	 * @var \Memcache
 	 */
 	public $handler;
 
@@ -126,7 +126,7 @@ class Memcache extends Base
 		}
 		else
 		{
-			return false;
+			return true;
 		}
 	}
 
@@ -163,5 +163,19 @@ class Memcache extends Base
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * 关闭锁对象
+	 * @return bool
+	 */
+	protected function __close()
+	{
+		if(null !== $this->handler)
+		{
+			$result = $this->handler->close();
+			$this->handler = null;
+			return $result;
+		}
 	}
 }
