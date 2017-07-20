@@ -42,7 +42,7 @@ class Redis extends Base
 	public function __construct($name, $params = array(), $waitTimeout = 0, $waitSleepTime = 1, $lockExpire = 3)
 	{
 		parent::__construct($name, $params);
-		if(!class_exists('Redis'))
+		if(!class_exists('\Redis'))
 		{
 			throw new Exception('未找到 Redis 扩展', LockConst::EXCEPTION_EXTENSIONS_NOT_FOUND);
 		}
