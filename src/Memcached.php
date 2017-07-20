@@ -34,7 +34,7 @@ class Memcached extends Base
 	/**
 	 * 构造方法
 	 * @param string $name 锁名称
-	 * @param array $params redis连接参数
+	 * @param array $params 连接参数
 	 * @param integer $waitTimeout 获得锁等待超时时间，单位：毫秒，0为不限制
 	 * @param integer $waitSleepTime 获得锁每次尝试间隔，单位：毫秒
 	 * @param integer $lockExpire 锁超时时间，单位：秒
