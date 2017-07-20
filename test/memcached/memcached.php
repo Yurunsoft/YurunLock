@@ -31,8 +31,8 @@ if(canTest(''))
 	}
 }
 
-// 并发测试-并发判断回调(callbacktest.file)
-$lock1 = new \Yurun\Until\Lock\File('test1');
+// 并发测试-并发判断回调(callbacktest.memcached)
+$lock1 = new \Yurun\Until\Lock\Memcached('test1');
 $result = $lock1->lock(
 	function(){
 		// 加锁后处理的任务
