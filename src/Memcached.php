@@ -84,7 +84,7 @@ class Memcached extends Base
 				'expire'	=>	time() + $this->lockExpire,
 				'guid'		=>	$this->guid,
 			);
-			if(null === $value)
+			if(false === $value)
 			{
 				// 无值
 				$result = $this->handler->add($this->name, $this->lockValue, $this->lockExpire);
@@ -144,7 +144,7 @@ class Memcached extends Base
 			'expire'	=>	time() + $this->lockExpire,
 			'guid'		=>	$this->guid,
 		);
-		if(null === $value)
+		if(false === $value)
 		{
 			// 无值
 			$result = $this->handler->add($this->name, $this->lockValue, $this->lockExpire);
