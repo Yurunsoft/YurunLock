@@ -84,7 +84,7 @@ class Memcache extends Base
 		$waitTimeout = $this->waitTimeout / 1000;
 		while(true)
 		{
-			$value = json_decode($this->handler->get($this->name), true);
+			$value = $this->handler->get($this->name);
 			$this->lockValue = array(
 				'expire'	=>	time() + $this->lockExpire,
 				'guid'		=>	$this->guid,
@@ -92,7 +92,7 @@ class Memcache extends Base
 			if(null === $value)
 			{
 				// 无值
-				$result = $this->handler->add($this->name, json_encode($this->lockValue), 0, $this->lockExpire);
+				$result = $this->handler->add($this->name, $this->lockValue, 0, $this->lockExpire);
 				if($result)
 				{
 					return true;
@@ -103,7 +103,7 @@ class Memcache extends Base
 				// 有值
 				if($value['expire'] < time())
 				{
-					$result = $this->handler->add($this->name, json_encode($this->lockValue), 0, $this->lockExpire);
+					$result = $this->handler->add($this->name, $this->lockValue, 0, $this->lockExpire);
 					if($result)
 					{
 						return true;
@@ -144,7 +144,7 @@ class Memcache extends Base
 	 */
 	protected function __unblockLock()
 	{
-		$value = json_decode($this->handler->get($this->name), true);
+		$value = $this->handler->get($this->name);
 		$this->lockValue = array(
 			'expire'	=>	time() + $this->lockExpire,
 			'guid'		=>	$this->guid,
@@ -152,7 +152,7 @@ class Memcache extends Base
 		if(null === $value)
 		{
 			// 无值
-			$result = $this->handler->add($this->name, json_encode($this->lockValue), 0, $this->lockExpire);
+			$result = $this->handler->add($this->name, $this->lockValue, 0, $this->lockExpire);
 			if(!$result)
 			{
 				return false;
@@ -163,7 +163,7 @@ class Memcache extends Base
 			// 有值
 			if($value < time())
 			{
-				$result = $this->handler->add($this->name, json_encode($this->lockValue), 0, $this->lockExpire);
+				$result = $this->handler->add($this->name, $this->lockValue, 0, $this->lockExpire);
 				if(!$result)
 				{
 					return false;

@@ -79,7 +79,7 @@ class Memcached extends Base
 		$waitTimeout = $this->waitTimeout / 1000;
 		while(true)
 		{
-			$value = json_decode($this->handler->get($this->name), true);
+			$value = $this->handler->get($this->name);
 			$this->lockValue = array(
 				'expire'	=>	time() + $this->lockExpire,
 				'guid'		=>	$this->guid,
@@ -87,7 +87,7 @@ class Memcached extends Base
 			if(null === $value)
 			{
 				// 无值
-				$result = $this->handler->add($this->name, json_encode($this->lockValue), $this->lockExpire);
+				$result = $this->handler->add($this->name, $this->lockValue, $this->lockExpire);
 				if($result)
 				{
 					return true;
@@ -98,7 +98,7 @@ class Memcached extends Base
 				// 有值
 				if($value['expire'] < time())
 				{
-					$result = $this->handler->add($this->name, json_encode($this->lockValue), $this->lockExpire);
+					$result = $this->handler->add($this->name, $this->lockValue, $this->lockExpire);
 					if($result)
 					{
 						return true;
@@ -139,7 +139,7 @@ class Memcached extends Base
 	 */
 	protected function __unblockLock()
 	{
-		$value = json_decode($this->handler->get($this->name), true);
+		$value = $this->handler->get($this->name);
 		$this->lockValue = array(
 			'expire'	=>	time() + $this->lockExpire,
 			'guid'		=>	$this->guid,
@@ -147,7 +147,7 @@ class Memcached extends Base
 		if(null === $value)
 		{
 			// 无值
-			$result = $this->handler->add($this->name, json_encode($this->lockValue), $this->lockExpire);
+			$result = $this->handler->add($this->name, $this->lockValue, $this->lockExpire);
 			if(!$result)
 			{
 				return false;
@@ -158,7 +158,7 @@ class Memcached extends Base
 			// 有值
 			if($value < time())
 			{
-				$result = $this->handler->add($this->name, json_encode($this->lockValue), $this->lockExpire);
+				$result = $this->handler->add($this->name, $this->lockValue, $this->lockExpire);
 				if(!$result)
 				{
 					return false;
