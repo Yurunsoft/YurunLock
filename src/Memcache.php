@@ -49,7 +49,7 @@ class Memcache extends Base
 		$this->waitTimeout = $waitTimeout;
 		$this->waitSleepTime = $waitSleepTime;
 		$this->lockExpire = $lockExpire;
-		if(\is_resource($params))
+		if($params instanceof \Memcache)
 		{
 			$this->handler = $params;
 			$this->isInHandler = true;
