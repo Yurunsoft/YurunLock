@@ -156,7 +156,7 @@ abstract class Base
 		{
 			$result = true;
 		}
-		return $result && $this->__close();
+		return $result && ($this->isInHandler || $this->__close());
 	}
 
 	/**
