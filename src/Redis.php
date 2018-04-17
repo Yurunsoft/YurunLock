@@ -69,6 +69,9 @@ class Redis extends Base
 			{
 				$this->handler->connect($host, $port, $timeout);
 			}
+			if(isset($params['password'])){
+				$this->handler->auth($params['password']);
+			}
 		}
 		$this->guid = uniqid('', true);
 	}
