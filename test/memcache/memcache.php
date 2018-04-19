@@ -1,5 +1,10 @@
 <?php
 namespace Yurun\Until\Lock;
+
+$ref = new \ReflectionClass('\Memcache');
+var_dump($ref->getMethods());
+exit;
+
 require_once dirname(dirname(__DIR__)) . '/vendor/autoload.php';
 function canTest($type)
 {
@@ -21,7 +26,14 @@ function test($type)
 // 测试结果为文件中内容为10为正确
 
 // 并发测试-传统加锁(test.memcache)
-$lock2 = new \Yurun\Until\Lock\Memcache('test2');
+$lock2 = new \Yurun\Until\Lock\Memcache('test2', [
+	// 'host'		=>	'127.0.0.1', // redis服务器地址
+	// 'port'		=>	6379,		 // 端口
+	// 'timeout'	=>	0,			 // 超时时间
+	// 'pconnect'	=>	false,		 // 是否持久化连接
+	// 'username'	=>	null,		 // 用户名
+	// 'password'	=>	null,		 // 密码
+]);
 if(canTest(''))
 {
 	if(LockConst::LOCK_RESULT_SUCCESS === $lock2->lock())

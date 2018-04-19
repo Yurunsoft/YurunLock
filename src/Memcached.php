@@ -60,9 +60,19 @@ class Memcached extends Base
 			$port = isset($params['port']) ? $params['port'] : 11211;
 			$this->handler = new \Memcached;
 			$this->handler->addServer($host, $port);
+			$this->handler->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
 			if(!empty($params['options']))
 			{
 				$this->handler->setOptions($params['options']);
+			}
+			if(!$result)
+			{
+				throw new Exception('Memcache连接失败');
+			}
+			// 密码验证
+			if(isset($params['username'], $params['password']) && !$this->handler->setSaslAuthData($params['username'], $params['password']))
+			{
+				throw new Exception('Memcache用户名密码验证失败');
 			}
 		}
 		$this->guid = uniqid('', true);

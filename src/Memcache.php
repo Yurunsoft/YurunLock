@@ -63,11 +63,20 @@ class Memcache extends Base
 			$this->handler = new \Memcache;
 			if($pconnect)
 			{
-				$this->handler->pconnect($host, $port, $timeout);
+				$result = $this->handler->pconnect($host, $port, $timeout);
 			}
 			else
 			{
-				$this->handler->connect($host, $port, $timeout);
+				$result = $this->handler->connect($host, $port, $timeout);
+			}
+			if(!$result)
+			{
+				throw new Exception('Memcache连接失败');
+			}
+			// 密码验证
+			if(isset($params['username'], $params['password']) && !$this->handler->setSaslAuthData($params['username'], $params['password']))
+			{
+				throw new Exception('Memcache用户名密码验证失败');
 			}
 		}
 		$this->guid = uniqid('', true);

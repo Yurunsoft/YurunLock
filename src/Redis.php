@@ -63,14 +63,25 @@ class Redis extends Base
 			$this->handler = new \Redis;
 			if($pconnect)
 			{
-				$this->handler->pconnect($host, $port, $timeout);
+				$result = $this->handler->pconnect($host, $port, $timeout);
 			}
 			else
 			{
-				$this->handler->connect($host, $port, $timeout);
+				$result = $this->handler->connect($host, $port, $timeout);
 			}
-			if(isset($params['password'])){
-				$this->handler->auth($params['password']);
+			if(!$result)
+			{
+				throw new Exception('Redis连接失败');
+			}
+			// 密码验证
+			if(isset($params['password']) && !$this->handler->auth($params['password']))
+			{
+				throw new Exception('Redis密码验证失败');
+			}
+			// 选择库
+			if(isset($params['select']))
+			{
+				$this->handler->select($params['select']);
 			}
 		}
 		$this->guid = uniqid('', true);
